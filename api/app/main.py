@@ -6,6 +6,7 @@ from app.core.config import settings
 from app.core.errors import AppError, app_error_handler
 from app.core.logging import setup_logging
 from app.routers.health import router as health_router
+from app.routers.auth import router as auth_router
 
 logger = logging.getLogger(__name__)
 
@@ -29,10 +30,9 @@ def create_app() -> FastAPI:
     # Globalni exception handler za AppError
     app.add_exception_handler(AppError, app_error_handler)
 
-    # 4. Uključivanje routera.
-    #    prefix="/health" znači: svi endpointi iz health routera
-    #    dobivaju prefix, pa @router.get("/") postaje GET /health.
+    # Ruteri
     app.include_router(health_router, prefix="/health", tags=["health"])
+    app.include_router(auth_router, prefix="/auth", tags=["auth"])
 
     logger.info("Aplikacija kreirana (env=%s)", settings.ENV)
     return app

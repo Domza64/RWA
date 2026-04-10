@@ -58,10 +58,11 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-### 4. Provjera
+### 4. Servisi
 
-- [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
-- [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+- [http://127.0.0.1:8000](http://127.0.0.1:8000) - API
+- [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) - Swagger
+- [http://127.0.0.1:5050](http://127.0.0.1:5050) - PG Admin
 
 ---
 
@@ -79,3 +80,53 @@ Format: `<tip>(<scope>): <opis>`
 | `chore`    | Tooling, config, infrastruktura      |
 | `docs`     | Dokumentacija                        |
 | `test`     | Testovi                              |
+
+## Migracije Baze (Alembic)
+
+Alembic je "version control za bazu" — svaka promjena modela zahtijeva novu migraciju.
+
+```bash
+cd api
+
+# Primijeni sve migracije (kreira tablice):
+alembic upgrade head
+
+# Rollback zadnje migracije:
+alembic downgrade -1
+
+# Generiraj novu migraciju nakon promjene modela:
+alembic revision --autogenerate -m "opis promjene"
+
+# Prikaži povijest migracija:
+alembic history
+```
+
+---
+
+## Korisne naredbe
+
+```bash
+# -- Baza --
+docker compose up -d db          # Pokreni PostgreSQL
+docker compose ps                # Status kontejnera
+docker compose logs db           # Logovi baze
+docker compose down              # Zaustavi sve
+docker compose down -v           # Zaustavi + obriši podatke (reset)
+
+# -- Backend --
+uvicorn app.main:app --reload    # Dev server s auto-reloadom
+pytest                           # Pokreni testove
+ruff check .                     # Lint (provjera kvalitete koda)
+black .                          # Format (automatsko formatiranje)
+
+# -- Migracije --
+alembic upgrade head             # Primijeni sve migracije
+alembic downgrade -1             # Rollback zadnje migracije
+alembic revision --autogenerate -m "opis"  # Nova migracija
+python -m app.seed               # Seed podatke u bazu
+
+# -- Git --
+git log --oneline --decorate     # Kratki pregled povijesti
+git diff <commit1>..<commit2>    # Usporedba dva commita
+git show <commit>                # Detalji jednog commita
+```

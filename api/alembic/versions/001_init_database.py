@@ -1,10 +1,10 @@
-"""init clubs and users
+"""init database
 
 Revision ID: 001
 Revises:
-Create Date: 2026-09-04
+Create Date: 2026-10-04
 
-Prva migracija — kreira tablice clubs i users.
+Prva migracija — kreira inicijalne potrebne tablice.
 
 Što radi upgrade():
   1. Kreira inicijalne tablice
@@ -21,8 +21,8 @@ from typing import Sequence, Union
 import sqlalchemy as sa
 from alembic import op
 
-revision: str = "002"
-down_revision: Union[str, None] = "001"
+revision: str = "001"
+down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -34,9 +34,9 @@ def upgrade() -> None:
     op.create_table(
         "users",
         sa.Column("user_id", sa.Integer(), primary_key=True, autoincrement=True),
-        sa.Column("username", sa.Text(), nullable=False),
-        sa.Column("email", sa.Text(), nullable=False),
-        sa.Column("password", sa.Text(), nullable=False),
+        sa.Column("username", sa.Text(), nullable=False, unique=True),
+        sa.Column("email", sa.Text(), nullable=False, unique=True),
+        sa.Column("password_hash", sa.Text(), nullable=False),
     )
 
     # -------------------
@@ -55,7 +55,7 @@ def upgrade() -> None:
     op.create_table(
         "ticket_status",
         sa.Column("status_id", sa.Integer(), primary_key=True, autoincrement=True),
-        sa.Column("status_text", sa.Text(), nullable=False),
+        sa.Column("status_text", sa.Text(), nullable=False, unique=True),
         sa.Column("board_id", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(["board_id"], ["board.board_id"]),
     )
