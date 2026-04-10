@@ -43,7 +43,7 @@ def upgrade() -> None:
     # board
     # -------------------
     op.create_table(
-        "board",
+        "boards",
         sa.Column("board_id", sa.Integer(), primary_key=True, autoincrement=True),
         sa.Column("name", sa.Text(), nullable=False),
         sa.Column("description", sa.Text(), nullable=False),
@@ -57,7 +57,7 @@ def upgrade() -> None:
         sa.Column("status_id", sa.Integer(), primary_key=True, autoincrement=True),
         sa.Column("status_text", sa.Text(), nullable=False, unique=True),
         sa.Column("board_id", sa.Integer(), nullable=False),
-        sa.ForeignKeyConstraint(["board_id"], ["board.board_id"]),
+        sa.ForeignKeyConstraint(["board_id"], ["boards.board_id"]),
     )
 
     # -------------------
@@ -72,14 +72,14 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("board_id", "user_id"),
 
         sa.ForeignKeyConstraint(["user_id"], ["users.user_id"]),
-        sa.ForeignKeyConstraint(["board_id"], ["board.board_id"]),
+        sa.ForeignKeyConstraint(["board_id"], ["boards.board_id"]),
     )
 
     # -------------------
     # ticket
     # -------------------
     op.create_table(
-        "ticket",
+        "tickets",
         sa.Column("id", sa.Integer(), primary_key=True, autoincrement=True),
         sa.Column("title", sa.Text(), nullable=False),
         sa.Column("description", sa.Text(), nullable=False),
@@ -92,15 +92,15 @@ def upgrade() -> None:
 
         sa.ForeignKeyConstraint(["asignee"], ["users.user_id"]),
         sa.ForeignKeyConstraint(["reporter"], ["users.user_id"]),
-        sa.ForeignKeyConstraint(["board_id"], ["board.board_id"]),
+        sa.ForeignKeyConstraint(["board_id"], ["boards.board_id"]),
         sa.ForeignKeyConstraint(["status_id"], ["ticket_status.status_id"]),
     )
 
 
 def downgrade() -> None:
-    op.drop_table("ticket")
+    op.drop_table("tickets")
     op.drop_table("board_members")
     op.drop_table("ticket_status")
-    op.drop_table("board")
+    op.drop_table("boards")
     op.drop_table("users")
     

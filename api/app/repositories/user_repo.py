@@ -18,3 +18,4 @@ async def get_by_id(db: AsyncSession, user_id: int) -> User | None:
 
 async def insert_user(db, username: str, email: str, password_hash: str):
     await db.execute(insert(User).values(username=username, email=email, password_hash=password_hash))
+    await db.flush()
