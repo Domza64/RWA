@@ -20,8 +20,9 @@ async def login(body: LoginRequest, db: AsyncSession = Depends(get_db)):
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 async def register(body: RegisterRequest, db: AsyncSession = Depends(get_db)):
     """Registracija korisnika"""
-    await auth_service.create_user(db, body.username, body.password, body.password)
+    await auth_service.create_user(db, body.username, body.email, body.password)
     return Response(status_code=status.HTTP_201_CREATED)
+
 
 @router.post("/refresh", response_model=TokenResponse)
 async def refresh(body: RefreshRequest, db: AsyncSession = Depends(get_db)):

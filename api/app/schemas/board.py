@@ -1,5 +1,7 @@
-from typing import List
+from typing import List, Literal
 from pydantic import BaseModel, Field
+
+from app.schemas.auth import UserResponse
 
 
 class CreateBoardRequest(BaseModel):
@@ -13,6 +15,8 @@ class BoardDTO(BaseModel):
     name: str
     description: str
 
+    model_config = {"from_attributes": True}
+
 
 class CreateBoardResponse(BaseModel):
     """Tijelo POST /boards responsea."""
@@ -22,3 +26,16 @@ class CreateBoardResponse(BaseModel):
 class BoardsResponse(BaseModel):
     """Odgovor s listom boardova za korisnika"""
     boards: List[BoardDTO]
+
+
+class AddUserRequest(BaseModel):
+    """Tijelo POST /{board_id}/members/add requesta."""
+    user_id: int
+    role: Literal["ADMIN", "MEMBER"]
+
+
+class BoardUserResponse(BaseModel):
+    role: str
+    user: UserResponse
+
+    model_config = {"from_attributes": True}

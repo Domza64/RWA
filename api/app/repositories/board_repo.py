@@ -6,7 +6,6 @@ from app.models.board import Board
 
 
 async def create_board(db: AsyncSession, name: str, description: str, user: User) -> int:
-    """Create a new board."""
     result = await db.execute(
         insert(Board)
         .values(name=name, description=description)
@@ -22,10 +21,30 @@ async def create_board(db: AsyncSession, name: str, description: str, user: User
 
 
 async def get_boards_for_user(db: AsyncSession, user_id: int):
-    """Get all boards belonging to a user."""
     result = await db.execute(
         select(Board)
         .join(BoardMembers)
         .where(BoardMembers.user_id == user_id)
     )
     return result.scalars().all()
+
+
+async def user_has_access(db, user_id, board_id):
+    result = await db.execute(
+        select(BoardMembers).where(
+            BoardMembers.user_id == user_id,
+            BoardMembers.board_id == board_id
+        )
+    )
+    return result.scalar_one_or_none() is not None
+
+
+async def user_has_admin_access(db, user_id, board_id):
+    result = await db.execute(
+        select(BoardMembers).where(
+            BoardMembers.user_id == user_id,
+            BoardMembers.board_id == board_id
+        )
+    )
+    user = result.scalar_one_or_none()
+    return user is not None and user.role == "ADMIN"
