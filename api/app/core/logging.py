@@ -1,0 +1,26 @@
+import logging
+import sys
+
+from app.core.config import settings
+
+
+def setup_logging() -> None:
+    """
+    Postavlja globalnu konfiguraciju logiranja.
+
+    Sav output ide na stdout (standardni ispis)
+    """
+    level = logging.DEBUG if settings.ENV == "dev" else logging.INFO
+
+    logging.basicConfig(
+        level=level,
+        # Format: timestamp | razina | ime loggera | poruka
+        # Primjer: 2026-02-23 10:15:30 | INFO     | app.main | Server started
+        format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        stream=sys.stdout,
+    )
+
+    # Uvicorn po defaultu logira svaki request (GET /health 200 OK...).
+    # To je previše buke za development, stišavamo na WARNING.
+    logging.getLogger("uvicorn.access").setLevel(logging.WARNING)

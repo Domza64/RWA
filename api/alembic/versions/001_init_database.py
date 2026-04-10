@@ -46,13 +46,14 @@ def upgrade() -> None:
         "board",
         sa.Column("board_id", sa.Integer(), primary_key=True, autoincrement=True),
         sa.Column("name", sa.Text(), nullable=False),
+        sa.Column("description", sa.Text(), nullable=False),
     )
 
     # -------------------
-    # task_status
+    # ticket_status
     # -------------------
     op.create_table(
-        "task_status",
+        "ticket_status",
         sa.Column("status_id", sa.Integer(), primary_key=True, autoincrement=True),
         sa.Column("status_text", sa.Text(), nullable=False),
         sa.Column("board_id", sa.Integer(), nullable=False),
@@ -75,30 +76,31 @@ def upgrade() -> None:
     )
 
     # -------------------
-    # task
+    # ticket
     # -------------------
     op.create_table(
-        "task",
+        "ticket",
         sa.Column("id", sa.Integer(), primary_key=True, autoincrement=True),
         sa.Column("title", sa.Text(), nullable=False),
         sa.Column("description", sa.Text(), nullable=False),
         sa.Column("asignee", sa.Integer(), nullable=True),
         sa.Column("reporter", sa.Integer(), nullable=False),
         sa.Column("board_id", sa.Integer(), nullable=False),
-        sa.Column("status_id", sa.Integer(), nullable=False),
+        sa.Column("status_id", sa.Integer(), nullable=True),
         sa.Column("due_date", sa.Date(), nullable=True),
+        sa.Column("type", sa.Text(), nullable=False),
 
         sa.ForeignKeyConstraint(["asignee"], ["users.user_id"]),
         sa.ForeignKeyConstraint(["reporter"], ["users.user_id"]),
         sa.ForeignKeyConstraint(["board_id"], ["board.board_id"]),
-        sa.ForeignKeyConstraint(["status_id"], ["task_status.status_id"]),
+        sa.ForeignKeyConstraint(["status_id"], ["ticket_status.status_id"]),
     )
 
 
 def downgrade() -> None:
-    op.drop_table("task")
+    op.drop_table("ticket")
     op.drop_table("board_members")
-    op.drop_table("task_status")
+    op.drop_table("ticket_status")
     op.drop_table("board")
     op.drop_table("users")
     
