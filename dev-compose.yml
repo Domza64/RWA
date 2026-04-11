@@ -1,5 +1,5 @@
 services:
-  db:
+  postgres:
     image: postgres:16
     restart: unless-stopped
     environment:
@@ -19,22 +19,15 @@ services:
       timeout: 3s
       retries: 5
 
-  pgadmin:
-    image: dpage/pgadmin4
-    restart: unless-stopped
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-      PGADMIN_CONFIG_SERVER_MODE: "False"
-      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+  pgweb:
+    image: sosedoff/pgweb:latest
     ports:
-      - "5050:80"
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin
+      - "9090:8081"
+    environment:
+      PGWEB_DATABASE_URL: postgres://${POSTGRES_USER:-pl_user}:${POSTGRES_PASSWORD:-pl_pass}@postgres:${DB_PORT:-5432}/${POSTGRES_DB:-pl_reg}?sslmode=disable
     depends_on:
-      db:
+      postgres:
         condition: service_healthy
 
 volumes:
   pgdata:
-  pgadmin_data:

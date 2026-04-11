@@ -62,7 +62,7 @@ uvicorn app.main:app --reload
 
 - [http://127.0.0.1:8000](http://127.0.0.1:8000) - API
 - [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) - Swagger
-- [http://127.0.0.1:5050](http://127.0.0.1:5050) - PG Admin
+- [http://127.0.0.1:9090](http://127.0.0.1:9090) - PG Web
 
 ---
 
