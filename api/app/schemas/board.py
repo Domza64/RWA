@@ -39,3 +39,15 @@ class BoardUserResponse(BaseModel):
     user: UserResponse
 
     model_config = {"from_attributes": True}
+
+
+class AddWorkflowStageRequest(BaseModel):
+    name: str = Field(min_length=1, max_length=30)
+
+
+class WorkflowStageResponse(BaseModel):
+    stage_id: int
+    name: str
+    # tickets: List[BasicTicketData] TODO: Implement after adding tickets
+
+    model_config = {"from_attributes": True}

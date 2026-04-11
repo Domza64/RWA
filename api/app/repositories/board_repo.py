@@ -1,8 +1,11 @@
+from unittest import result
+
 from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import User, BoardMembers
 from app.models.board import Board
+from app.models.workflow_stage import WorkflowStage
 
 
 async def create_board(db: AsyncSession, name: str, description: str, user: User) -> int:
@@ -48,3 +51,12 @@ async def user_has_admin_access(db, user_id, board_id):
     )
     user = result.scalar_one_or_none()
     return user is not None and user.role == "ADMIN"
+
+
+async def get_workflow_stages(db, board_id):
+    result = await db.execute(
+        select(WorkflowStage).where(
+            WorkflowStage.board_id == board_id
+        )
+    )
+    return result.scalars().all()

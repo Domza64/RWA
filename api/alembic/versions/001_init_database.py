@@ -50,14 +50,17 @@ def upgrade() -> None:
     )
 
     # -------------------
-    # ticket_status
+    # workflow_stage
     # -------------------
     op.create_table(
-        "ticket_status",
-        sa.Column("status_id", sa.Integer(), primary_key=True, autoincrement=True),
-        sa.Column("status_text", sa.Text(), nullable=False, unique=True),
+        "workflow_stage",
+        sa.Column("stage_id", sa.Integer(), primary_key=True, autoincrement=True),
+        sa.Column("name", sa.Text(), nullable=False),
+        sa.Column("order", sa.Integer(), nullable=False),
         sa.Column("board_id", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(["board_id"], ["boards.board_id"]),
+        sa.UniqueConstraint("board_id", "order"),
+        sa.UniqueConstraint("board_id", "name"),
     )
 
     # -------------------
@@ -86,21 +89,21 @@ def upgrade() -> None:
         sa.Column("asignee", sa.Integer(), nullable=True),
         sa.Column("reporter", sa.Integer(), nullable=False),
         sa.Column("board_id", sa.Integer(), nullable=False),
-        sa.Column("status_id", sa.Integer(), nullable=True),
+        sa.Column("stage_id", sa.Integer(), nullable=True),
         sa.Column("due_date", sa.Date(), nullable=True),
         sa.Column("type", sa.Text(), nullable=False),
 
         sa.ForeignKeyConstraint(["asignee"], ["users.user_id"]),
         sa.ForeignKeyConstraint(["reporter"], ["users.user_id"]),
         sa.ForeignKeyConstraint(["board_id"], ["boards.board_id"]),
-        sa.ForeignKeyConstraint(["status_id"], ["ticket_status.status_id"]),
+        sa.ForeignKeyConstraint(["stage_id"], ["workflow_stage.stage_id"]),
     )
 
 
 def downgrade() -> None:
     op.drop_table("tickets")
     op.drop_table("board_members")
-    op.drop_table("ticket_status")
+    op.drop_table("workflow_stage")
     op.drop_table("boards")
     op.drop_table("users")
     

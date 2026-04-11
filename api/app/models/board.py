@@ -28,3 +28,8 @@ class Board(Base):
         "BoardMembers",
         back_populates="board"
     )
+
+    workflow_stages: Mapped[List["WorkflowStage"]] = relationship(
+        "WorkflowStage",
+        back_populates="board"
+    )

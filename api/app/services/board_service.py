@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.errors import AppError
 from app.models.user import User
 from app.repositories import board_repo, membership_repo
-from app.schemas.board import BoardDTO, BoardUserResponse
+from app.schemas.board import BoardDTO, BoardUserResponse, WorkflowStageResponse
 
 
 async def get_boards(db: AsyncSession, user_id: int) -> List[BoardDTO]:
@@ -26,9 +26,7 @@ async def create_board(db: AsyncSession, user: User, name: str, description: str
 
 async def get_members(db: AsyncSession, board_id: int, user_id: int) -> List[BoardUserResponse]:
     """Vraća listu članova"""
-    has_access = await board_repo.user_has_access(db, user_id, board_id)
-    if not has_access:
-        raise AppError("forbidden", "You don't have access to this board", 403)
+    await check_read_access(db, board_id, user_id)
 
     members = await membership_repo.get_board_members(db, board_id)
     return [user_response for user_response in members]
@@ -36,11 +34,41 @@ async def get_members(db: AsyncSession, board_id: int, user_id: int) -> List[Boa
 
 async def add_member(db: AsyncSession, board_id: int, user: User, user_id: int, role: Literal["ADMIN", "MEMBER"]):
     """user je korisnik koji pokusava dodati, a user_id je id korisnika kojeg se dodaje kao membera"""
-    has_access = await board_repo.user_has_admin_access(db, user.user_id, board_id)
-    if not has_access:
-        raise AppError("forbidden", "You can't add users to this board", 403)
+    await check_admin_access(db, user.user_id, board_id)
 
     try:
         await membership_repo.add_membership(db, board_id, user_id, role)
     except IntegrityError:
-        raise AppError("unable_to_add_user", "User with id {} already exists in board or not found".format(user_id), 400)
+        # TODO: More specific error?
+        raise AppError("unable_to_add_user", "User: {} or board: {} not found or user already exists in the board members".format(user_id, board_id), 400)
+
+
+async def add_workflow_stage(db, board_id, user, name):
+    """Dodaje novi ticket status na board"""
+    await check_admin_access(db, user.user_id, board_id)
+
+    try:
+        await membership_repo.add_workflow_stage(db, board_id, name)
+    except IntegrityError:
+        raise AppError("unable_to_create_stage", "Board with this name already exists", 400)
+
+
+async def get_workflow_stages(db, board_id, user_id) -> List[WorkflowStageResponse]:
+    """Vraća listu workflow stageva na boardu"""
+    await check_read_access(db, board_id, user_id)
+
+    workflow_stages = await board_repo.get_workflow_stages(db, board_id)
+    return workflow_stages
+
+# ---- Helper funkcije ----
+
+async def check_read_access(db: AsyncSession, board_id: int, user_id: int):
+    has_access = await board_repo.user_has_access(db, user_id, board_id)
+    if not has_access:
+        raise AppError("forbidden", "You don't have access to this board", 403)
+
+
+async def check_admin_access(db: AsyncSession, user_id: int, board_id: int):
+    has_access = await board_repo.user_has_admin_access(db, user_id, board_id)
+    if not has_access:
+        raise AppError("forbidden", "You don't have admin rights to this board", 403)
