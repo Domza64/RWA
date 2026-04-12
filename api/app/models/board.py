@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from typing import List
 
 from sqlalchemy import String
@@ -13,7 +11,7 @@ class Board(Base):
     Board koji sadrzi taskove
 
     Atributi:
-        id:              Surrogate primary key.
+        board_id:              Surrogate primary key.
         name:            Ime boarda.
         description:     Opis boarda.
     """

@@ -48,7 +48,7 @@ async def add_workflow_stage(db, board_id, user, name):
     await check_admin_access(db, user.user_id, board_id)
 
     try:
-        await membership_repo.add_workflow_stage(db, board_id, name)
+        await board_repo.add_workflow_stage(db, board_id, name)
     except IntegrityError:
         raise AppError("unable_to_create_stage", "Board with this name already exists", 400)
 

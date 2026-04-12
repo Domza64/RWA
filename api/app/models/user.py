@@ -11,11 +11,10 @@ class User(Base):
     Korisnik sustava
 
     Atributi:
-        id:            Surrogate primary key.
+        user_id:       Surrogate primary key.
         username:      korisnicko ime (jedinstven u sustavu).
         email:         Login email (jedinstven u sustavu).
         password_hash: Bcrypt hash lozinke (NIKAD plain text).
-        boards:        List of boards
     """
 
     __tablename__ = "users"
@@ -28,4 +27,16 @@ class User(Base):
     memberships: Mapped[List["BoardMembers"]] = relationship(
         "BoardMembers",
         back_populates="user"
+    )
+
+    assigned_tickets: Mapped[List["Ticket"]] = relationship(
+        "Ticket",
+        foreign_keys="Ticket.assignee_id",
+        back_populates="assignee"
+    )
+
+    reported_tickets: Mapped[List["Ticket"]] = relationship(
+        "Ticket",
+        foreign_keys="Ticket.reporter_id",
+        back_populates="reporter"
     )

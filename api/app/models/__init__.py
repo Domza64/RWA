@@ -19,5 +19,7 @@ from app.core.database import Base
 from app.models.user import User
 from app.models.board import Board
 from app.models.board_members import BoardMembers
+from app.models.workflow_stage import WorkflowStage
+from app.models.ticket import Ticket
 
-__all__ = ["Base", "User", "Board", "BoardMembers"]
+__all__ = ["Base", "User", "Board", "BoardMembers", "WorkflowStage", "Ticket"]

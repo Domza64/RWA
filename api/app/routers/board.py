@@ -8,7 +8,8 @@ from app.core.deps import get_db
 from app.models import User
 from app.schemas.board import CreateBoardRequest, BoardsResponse, CreateBoardResponse, AddUserRequest, \
     BoardUserResponse, AddWorkflowStageRequest, WorkflowStageResponse
-from app.services import board_service
+from app.schemas.ticket import CreateTicketRequest
+from app.services import board_service, ticket_service
 
 router = APIRouter()
 
@@ -53,3 +54,10 @@ async def get_workflow_stages(board_id: int, db: AsyncSession = Depends(get_db),
     """Vraća listu workflow stageva na boardu"""
     stages = await board_service.get_workflow_stages(db, board_id, user.user_id)
     return [workflow_stage for workflow_stage in stages]
+
+
+@router.post("/{board_id}/ticket")
+async def create_ticket(body: CreateTicketRequest, board_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(deps.get_current_user)):
+    await ticket_service.create_ticket(db, board_id, user.user_id, body)
+
+    return Response(status_code=status.HTTP_201_CREATED)

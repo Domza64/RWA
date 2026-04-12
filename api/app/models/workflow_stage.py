@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import List
+
 from sqlalchemy import String, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -12,9 +14,10 @@ class WorkflowStage(Base):
     Admini boarda ih sami dodavaju, a članovi onda mogu stavljati tickete u workflow stageve.
 
     Atributi:
-        id:              Surrogate primary key.
-        name:            Ime boarda.
-        description:     Opis boarda.
+        stage_id:              Surrogate primary key.
+        name:                  Ime workflow stagea.
+        order:                 Redni broj za prikaz.
+        board_id:              Board kojem pripada.
     """
 
     __tablename__ = "workflow_stage"
@@ -29,4 +32,10 @@ class WorkflowStage(Base):
 
     __table_args__ = (
         UniqueConstraint("board_id", "order"),
+    )
+
+    tickets: Mapped[List["Ticket"]] = relationship(
+        "Ticket",
+        foreign_keys="Ticket.stage_id",
+        back_populates="current_stage"
     )

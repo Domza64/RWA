@@ -83,18 +83,21 @@ def upgrade() -> None:
     # -------------------
     op.create_table(
         "tickets",
-        sa.Column("id", sa.Integer(), primary_key=True, autoincrement=True),
+        sa.Column("ticket_id", sa.Integer(), primary_key=True, autoincrement=True),
         sa.Column("title", sa.Text(), nullable=False),
         sa.Column("description", sa.Text(), nullable=False),
-        sa.Column("asignee", sa.Integer(), nullable=True),
-        sa.Column("reporter", sa.Integer(), nullable=False),
+        sa.Column("due_date", sa.Date(), nullable=True),
+        sa.Column("urgency", sa.Integer(), nullable=True),
+        sa.Column("assignee_id", sa.Integer(), nullable=True),
+        sa.Column("reporter_id", sa.Integer(), nullable=False),
         sa.Column("board_id", sa.Integer(), nullable=False),
         sa.Column("stage_id", sa.Integer(), nullable=True),
-        sa.Column("due_date", sa.Date(), nullable=True),
-        sa.Column("type", sa.Text(), nullable=False),
 
-        sa.ForeignKeyConstraint(["asignee"], ["users.user_id"]),
-        sa.ForeignKeyConstraint(["reporter"], ["users.user_id"]),
+        sa.CheckConstraint("urgency >= 1 AND urgency <= 5", name="urgency_range_check"),
+        sa.UniqueConstraint("order", "board_id", "stage_id"),
+
+        sa.ForeignKeyConstraint(["assignee_id"], ["users.user_id"]),
+        sa.ForeignKeyConstraint(["reporter_id"], ["users.user_id"]),
         sa.ForeignKeyConstraint(["board_id"], ["boards.board_id"]),
         sa.ForeignKeyConstraint(["stage_id"], ["workflow_stage.stage_id"]),
     )

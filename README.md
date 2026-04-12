@@ -55,7 +55,9 @@ python -m venv .venv
 # Windows:     .venv\Scripts\Activate.ps1
 
 pip install -r requirements.txt
-uvicorn app.main:app --reload
+
+uvicorn app.main:app --reload  # run app
+pytest # run tests
 ```
 
 ### 4. Servisi
@@ -99,34 +101,4 @@ alembic revision --autogenerate -m "opis promjene"
 
 # Prikaži povijest migracija:
 alembic history
-```
-
----
-
-## Korisne naredbe
-
-```bash
-# -- Baza --
-docker compose up -d db          # Pokreni PostgreSQL
-docker compose ps                # Status kontejnera
-docker compose logs db           # Logovi baze
-docker compose down              # Zaustavi sve
-docker compose down -v           # Zaustavi + obriši podatke (reset)
-
-# -- Backend --
-uvicorn app.main:app --reload    # Dev server s auto-reloadom
-pytest                           # Pokreni testove
-ruff check .                     # Lint (provjera kvalitete koda)
-black .                          # Format (automatsko formatiranje)
-
-# -- Migracije --
-alembic upgrade head             # Primijeni sve migracije
-alembic downgrade -1             # Rollback zadnje migracije
-alembic revision --autogenerate -m "opis"  # Nova migracija
-python -m app.seed               # Seed podatke u bazu
-
-# -- Git --
-git log --oneline --decorate     # Kratki pregled povijesti
-git diff <commit1>..<commit2>    # Usporedba dva commita
-git show <commit>                # Detalji jednog commita
 ```
