@@ -94,7 +94,7 @@ def upgrade() -> None:
         sa.Column("stage_id", sa.Integer(), nullable=True),
 
         sa.CheckConstraint("urgency >= 1 AND urgency <= 5", name="urgency_range_check"),
-        sa.UniqueConstraint("order", "board_id", "stage_id"),
+        sa.UniqueConstraint("board_id", "stage_id"),
 
         sa.ForeignKeyConstraint(["assignee_id"], ["users.user_id"]),
         sa.ForeignKeyConstraint(["reporter_id"], ["users.user_id"]),

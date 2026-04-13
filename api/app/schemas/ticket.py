@@ -8,7 +8,9 @@ from app.schemas.auth import UserResponse
 
 class WorkflowStageDTO(BaseModel):
     stage_id: int
-    stage_name: str
+    name: str
+
+    model_config = {"from_attributes": True}
 
 
 class TicketResponse(BaseModel):

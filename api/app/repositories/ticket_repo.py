@@ -1,4 +1,5 @@
 from sqlalchemy import select, insert
+from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.ticket import Ticket
@@ -7,7 +8,15 @@ from app.schemas.ticket import CreateTicketRequest
 
 async def get_ticket(db: AsyncSession, ticket_id: int) -> Ticket | None:
     """Vraća ticket."""
-    result = await db.execute(select(Ticket).where(Ticket.ticket_id == ticket_id))
+    result = await db.execute(
+        select(Ticket)
+        .options(
+            selectinload(Ticket.assignee),
+            selectinload(Ticket.reporter),
+            selectinload(Ticket.current_stage),
+        )
+        .where(Ticket.ticket_id == ticket_id)
+    )
     return result.scalar_one_or_none()
 
 

@@ -11,7 +11,7 @@ router = APIRouter()
 
 
 @router.get("/{ticket_id}", response_model=TicketResponse)
-async def get_boards(ticket_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(deps.get_current_user)):
+async def get_ticket(ticket_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(deps.get_current_user)):
     """Vraća ticket."""
     ticket = await ticket_service.get_ticket(db, user.user_id, ticket_id)
     return ticket
