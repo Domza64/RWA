@@ -140,8 +140,8 @@ alembic history
 - [x] `GET /ticket/{ticket_id}` → get ticket
 - [ ] `PUT /ticket/{ticket_id}` → update ticket
 - [ ] `DELETE /ticket/{ticket_id}` → delete ticket
-- [ ] `GET /ticket/assigned` → List of assigned tickets
-- [ ] `GET /ticket/reported` → List of reported tickets
+- [x] `GET /ticket/assigned` → List of assigned tickets
+- [x] `GET /ticket/reported` → List of reported tickets
 
 ---
 ## Misc
