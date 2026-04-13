@@ -39,3 +39,29 @@ async def add_ticket(
     )
     await db.flush()
     return ticket
+
+
+async def get_assigned_tickets(db: AsyncSession, user_id: int):
+    result = await db.execute(
+        select(Ticket)
+        .options(
+            selectinload(Ticket.assignee),
+            selectinload(Ticket.reporter),
+            selectinload(Ticket.current_stage),
+        )
+        .where(Ticket.assignee_id == user_id)
+    )
+    return result.scalars().all()
+
+
+async def get_reported_tickets(db: AsyncSession, user_id: int):
+    result = await db.execute(
+        select(Ticket)
+        .options(
+            selectinload(Ticket.assignee),
+            selectinload(Ticket.reporter),
+            selectinload(Ticket.current_stage),
+        )
+        .where(Ticket.reporter_id == user_id)
+    )
+    return result.scalars().all()

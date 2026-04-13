@@ -1,3 +1,5 @@
+from typing import Literal
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.errors import AppError
@@ -40,6 +42,31 @@ async def create_ticket(db: AsyncSession, board_id: int, user_id: int, body: Cre
     return t
 
 
+async def get_tickets(db: AsyncSession, user_id: int, type: Literal["REPORTED", "ASSIGNED"]) -> list[TicketResponse]:
+    if type == "REPORTED":
+        tickets = await ticket_repo.get_reported_tickets(db, user_id)
+    else:
+        tickets = await ticket_repo.get_assigned_tickets(db, user_id)
+    all_stages = []
+    if len(tickets) > 0:
+        all_stages = await board_repo.get_workflow_stages(db, tickets[0].board_id)
+
+    responses = []
+    for ticket in tickets:
+        responses.append(
+            TicketResponse(
+                ticket_id=ticket.ticket_id,
+                title=ticket.title,
+                description=ticket.description,
+                due_date=ticket.due_date,
+                urgency=ticket.urgency,
+                assignee=ticket.assignee,
+                reporter=ticket.reporter,
+                current_stage=ticket.current_stage,
+                possible_stages=[stage for stage in all_stages],
+            )
+        )
+    return responses
 
 
 # ---- Helper funkcije ----
