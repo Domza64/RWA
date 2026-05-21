@@ -1,11 +1,13 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { api, ApiError } from '@/services/api'
+import type { TokenResponse } from '@/types/auth'
+import type { UserData } from '@/types/user'
+import { api } from '@/services/api'
 
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref(null)
+  const user = ref<UserData | null>(null)
   const loading = ref(true)
-  const isAuthenticated = computed(() => !!accessToken.value)
+  const isAuthenticated = ref(false) // computed(() => !!accessToken.value && user != null)
   const accessToken = ref(localStorage.getItem('access_token') || null)
 
   function setTokens(access: string, refresh: string) {
@@ -15,29 +17,41 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function fetchMe() {
-    if (!accessToken.value) return
+    const { data } = await api.get<UserData>('/auth/me')
+    user.value = data
+  }
 
+  async function refreshToken(): Promise<void> {
+    const refreshToken = localStorage.getItem('refresh_token')
+    if (!refreshToken) throw new Error('No refresh token')
+    const { data } = await api.post<TokenResponse>(
+      '/auth/refresh',
+      { refresh_token: refreshToken },
+      { headers: { Authorization: '' } },
+    )
+    accessToken.value = data.access_token
+    localStorage.setItem('access_token', data.access_token)
+    localStorage.setItem('refresh_token', data.refresh_token)
+  }
+
+  async function initAuth() {
     try {
-      loading.value = true
-      const data = await api.get('/auth/me')
-      user.value = data
-      return data
-    } catch (error) {
-      if (error instanceof ApiError && error.status === 401) logout()
-      throw error
+      if (!accessToken.value) {
+        return
+      }
+      await fetchMe()
+      isAuthenticated.value = true
+    } catch {
+      logout()
+      isAuthenticated.value = false
     } finally {
       loading.value = false
     }
   }
 
-  async function initAuth() {
-    await fetchMe()
-    loading.value = false
-  }
-
   async function login(username: string, password: string) {
-    const response = await api.post('/auth/login', { username, password })
-    setTokens(response.access_token, response.refresh_token)
+    const { data } = await api.post<TokenResponse>('/auth/login', { username, password })
+    setTokens(data.access_token, data.refresh_token)
     await fetchMe()
     return user.value
   }
@@ -60,7 +74,7 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     loading,
     setTokens,
-    fetchMe,
+    refreshToken,
     login,
     register,
     logout,

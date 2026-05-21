@@ -8,13 +8,14 @@ import router from './router'
 import { useNotificationStore } from './stores/notification'
 
 const app = createApp(App)
+const pinia = createPinia()
 
-app.use(createPinia())
+app.use(pinia)
 app.use(router)
 
 app.config.errorHandler = (err) => {
   const message = err instanceof Error ? err.message : 'Unexpected error.'
-  useNotificationStore().error(message)
+  useNotificationStore(pinia).error(message)
 }
 
 app.mount('#app')
