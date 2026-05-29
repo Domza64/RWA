@@ -2,7 +2,7 @@
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { createBoard } from '@/services/boards'
-import BaseInput from '@/components/ui/BaseInput.vue'
+import BaseInput from '@/components/ui/inputs/BaseInput.vue'
 
 const router = useRouter()
 

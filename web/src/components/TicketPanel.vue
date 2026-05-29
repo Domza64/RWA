@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { getBoardTickets } from '@/services/tickets'
 import { getWorkflowStages } from '@/services/boards'
 import type { SimpleTicket, WorkflowStage } from '@/types/ticket'
 import { useNotificationStore } from '@/stores/notification'
 import TicketCard from '@/components/ui/cards/TicketCard.vue'
+import { useTicketEventsStore } from '@/stores/ticketEvents'
 
 const notificationStore = useNotificationStore()
+const ticketEventsStore = useTicketEventsStore()
 const boardId = parseInt(useRoute().params.board_id as string)
 
 const loading = ref(true)
@@ -34,6 +36,10 @@ async function load(): Promise<void> {
 }
 
 onMounted(load)
+
+watch(() => ticketEventsStore.refreshCounter, () => {
+  load()
+})
 
 const groupedTickets = computed(() => {
   const map = new Map<number, SimpleTicket[]>()

@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import BaseInput from '@/components/ui/BaseInput.vue'
+import BaseInput from '@/components/ui/inputs/BaseInput.vue'
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
