@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.errors import AppError
 from app.repositories import ticket_repo, board_repo
-from app.schemas.ticket import TicketResponse, CreateTicketRequest
+from app.schemas.ticket import SimpleTicketResponse, TicketResponse, CreateTicketRequest
 
 
 async def get_ticket(db: AsyncSession, user_id: int, ticket_id: int) -> TicketResponse:
@@ -29,6 +29,26 @@ async def get_ticket(db: AsyncSession, user_id: int, ticket_id: int) -> TicketRe
         current_stage=ticket.current_stage,
         possible_stages=[stage for stage in all_stages],
     )
+
+
+async def get_board_tickets(db: AsyncSession, user_id: int, board_id: int) -> list[SimpleTicketResponse]:
+    await check_access(db, user_id, board_id)
+
+    tickets = await ticket_repo.get_board_tickets(db, board_id)
+
+    responses = []
+    for ticket in tickets:
+        responses.append(
+            SimpleTicketResponse(
+                ticket_id=ticket.ticket_id,
+                title=ticket.title,
+                due_date=ticket.due_date,
+                urgency=ticket.urgency,
+                assignee=ticket.assignee,
+                current_stage=ticket.current_stage,
+            )
+        )
+    return responses
 
 
 async def create_ticket(db: AsyncSession, board_id: int, user_id: int, body: CreateTicketRequest):

@@ -41,6 +41,18 @@ async def add_ticket(
     return ticket
 
 
+async def get_board_tickets(db: AsyncSession, board_id: int):
+    result = await db.execute(
+        select(Ticket)
+        .options(
+            selectinload(Ticket.assignee),
+            selectinload(Ticket.current_stage),
+        )
+        .where(Ticket.board_id == board_id)
+    )
+    return result.scalars().all()
+
+
 async def get_assigned_tickets(db: AsyncSession, user_id: int):
     result = await db.execute(
         select(Ticket)

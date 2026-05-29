@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core import deps
 from app.core.deps import get_db
 from app.models import User
-from app.schemas.ticket import TicketResponse
+from app.schemas.ticket import SimpleTicketResponse, TicketResponse
 from app.services import ticket_service
 
 router = APIRouter()
@@ -29,3 +29,9 @@ async def get_ticket(ticket_id: int, db: AsyncSession = Depends(get_db), user: U
     """Vraća ticket."""
     ticket = await ticket_service.get_ticket(db, user.user_id, ticket_id)
     return ticket
+
+@router.get("/board/{board_id}", response_model=List[SimpleTicketResponse])
+async def get_board_tickets(board_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(deps.get_current_user)):
+    """Vraća tickete na boardu."""
+    tickets = await ticket_service.get_board_tickets(db, user.user_id, board_id)
+    return tickets

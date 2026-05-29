@@ -27,6 +27,15 @@ class TicketResponse(BaseModel):
     possible_stages: List[WorkflowStageDTO]
 
 
+class SimpleTicketResponse(BaseModel):
+    ticket_id: int
+    title: str
+    due_date: date | None
+    urgency: int
+    assignee: UserResponse | None
+    current_stage: WorkflowStageDTO | None
+
+
 class CreateTicketRequest(BaseModel):
     """Tijelo POST /{board_id}/ticket requesta."""
     title: str = Field(min_length=1, max_length=50)
