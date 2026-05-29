@@ -23,11 +23,6 @@ class CreateBoardResponse(BaseModel):
     board_id: int
 
 
-class BoardsResponse(BaseModel):
-    """Odgovor s listom boardova za korisnika"""
-    boards: List[BoardDTO]
-
-
 class AddUserRequest(BaseModel):
     """Tijelo POST /{board_id}/members/add requesta."""
     user_id: int

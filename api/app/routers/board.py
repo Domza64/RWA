@@ -6,19 +6,19 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core import deps
 from app.core.deps import get_db
 from app.models import User
-from app.schemas.board import CreateBoardRequest, BoardsResponse, CreateBoardResponse, AddUserRequest, \
+from app.schemas.board import CreateBoardRequest, CreateBoardResponse, AddUserRequest, \
     BoardUserResponse, AddWorkflowStageRequest, WorkflowStageResponse
 from app.schemas.ticket import CreateTicketRequest
 from app.services import board_service, ticket_service
+from app.schemas.board import BoardDTO
 
 router = APIRouter()
 
 
-@router.get("/", response_model=BoardsResponse)
+@router.get("/", response_model=list[BoardDTO])
 async def get_boards(db: AsyncSession = Depends(get_db), user: User = Depends(deps.get_current_user)):
     """Vraća listu boardova korisnika."""
-    boards = await board_service.get_boards(db, user.user_id)
-    return BoardsResponse(boards=boards)
+    return await board_service.get_boards(db, user.user_id)
 
 
 @router.post("/", response_model=CreateBoardResponse)
