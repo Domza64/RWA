@@ -1,32 +1,8 @@
 <template>
   <form @submit.prevent="register" class="bg-green-100 max-w-min p-2">
-    <div class="flex flex-col">
-      <label for="username">Username</label>
-      <input
-        id="username"
-        class="border border-green-800 rounded"
-        v-model="formData.username"
-        type="text"
-      />
-    </div>
-    <div class="flex flex-col">
-      <label for="email">Email</label>
-      <input
-        id="email"
-        class="border border-green-800 rounded"
-        v-model="formData.email"
-        type="email"
-      />
-    </div>
-    <div class="flex flex-col">
-      <label for="password">Password</label>
-      <input
-        id="password"
-        class="border border-green-800 rounded"
-        v-model="formData.password"
-        type="password"
-      />
-    </div>
+    <BaseInput id="username" label="Username" v-model="formData.username" />
+    <BaseInput id="email" label="Email" type="email" v-model="formData.email" />
+    <BaseInput id="password" label="Password" type="password" v-model="formData.password" />
     <button :disabled="loading" class="bg-green-800 text-white rounded w-full mt-2 font-bold">
       Register
     </button>
@@ -35,6 +11,7 @@
 </template>
 
 <script setup>
+import BaseInput from '@/components/ui/BaseInput.vue'
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'

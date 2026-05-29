@@ -16,6 +16,16 @@ const router = createRouter({
       component: () => import('../views/BoardsView.vue'),
     },
     {
+      path: '/boards/create',
+      name: 'create',
+      component: () => import('../views/BoardCreateView.vue'),
+    },
+    {
+      path: '/boards/:board_id',
+      name: 'board',
+      component: () => import('../views/BoardView.vue'),
+    },
+    {
       path: '/login',
       name: 'login',
       component: () => import('../views/LoginView.vue'),
@@ -35,7 +45,7 @@ router.beforeEach((to) => {
   const currentRoute: string = to.name?.toString() || ''
   console.log(currentRoute)
 
-  if (!publicRoutes.includes(currentRoute) && !authStore.user) {
+  if (!publicRoutes.includes(currentRoute) && !authStore.user && !authStore.loading) {
     return { name: 'login' }
   }
 })

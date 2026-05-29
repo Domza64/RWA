@@ -1,23 +1,13 @@
 <template>
   <form @submit.prevent="login" class="bg-green-100 max-w-min p-2">
-    <div class="flex flex-col">
-      <label for="username">Username</label>
-      <input
-        required
-        class="border border-green-800 rounded"
-        v-model="formData.username"
-        type="text"
-      />
-    </div>
-    <div class="flex flex-col">
-      <label for="password">Password</label>
-      <input
-        required
-        class="border border-green-800 rounded"
-        v-model="formData.password"
-        type="password"
-      />
-    </div>
+    <BaseInput id="username" label="Username" required v-model="formData.username" />
+    <BaseInput
+      id="password"
+      label="Password"
+      type="password"
+      required
+      v-model="formData.password"
+    />
     <button :disabled="loading" class="bg-green-800 text-white rounded w-full mt-2 font-bold">
       Login
     </button>
@@ -26,6 +16,7 @@
 </template>
 
 <script setup>
+import BaseInput from '@/components/ui/BaseInput.vue'
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
