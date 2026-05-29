@@ -23,6 +23,7 @@ async def get_ticket(db: AsyncSession, ticket_id: int) -> Ticket | None:
 async def add_ticket(
     db: AsyncSession,
     board_id: int,
+    reporter_id: int,
     body: CreateTicketRequest
 ):
     ticket = await db.execute(
@@ -33,7 +34,7 @@ async def add_ticket(
             urgency=body.urgency,
             board_id=board_id,
             assignee_id=body.asignee_id,
-            reporter_id=body.reporter_id,
+            reporter_id=reporter_id,
             stage_id=body.current_stage
         )
     )

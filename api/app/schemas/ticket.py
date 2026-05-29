@@ -43,5 +43,4 @@ class CreateTicketRequest(BaseModel):
     due_date: date | None = None # TODO: validate
     urgency: Literal[1, 2, 3, 4, 5]
     asignee_id: int | None = None
-    reporter_id: int
     current_stage: int | None = None

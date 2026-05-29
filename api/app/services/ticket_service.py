@@ -56,7 +56,7 @@ async def create_ticket(db: AsyncSession, board_id: int, user_id: int, body: Cre
     if not has_access:
         raise AppError("forbidden", "You don't have access to this board", 403)
 
-    ticket = await ticket_repo.add_ticket(db, board_id, body)
+    ticket = await ticket_repo.add_ticket(db, board_id, user_id, body)
     t = ticket.scalar_one_or_none()
     print(t)
     return t
