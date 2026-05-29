@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-green-800 text-white">
+  <header class="bg-indigo-800 text-white">
     <nav class="mx-auto max-w-7xl w-full flex justify-between">
       <div>
         <RouterLink to="/">Home</RouterLink>

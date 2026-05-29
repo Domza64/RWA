@@ -6,7 +6,7 @@ const props = defineProps<{ notification: Notification }>()
 const store = useNotificationStore()
 
 const styles = {
-  success: 'border-green-500 bg-green-50 text-green-800',
+  success: 'border-indigo-500 bg-indigo-50 text-indigo-800',
   error: 'border-red-500 bg-red-100 text-red-800',
   info: 'border-blue-500 bg-blue-50 text-blue-800',
 }

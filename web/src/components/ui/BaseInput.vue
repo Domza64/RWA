@@ -5,7 +5,7 @@
       :id="id"
       :type="type"
       :required="required"
-      class="border border-green-800 rounded p-1"
+      class="border border-indigo-800 rounded p-1"
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
     />

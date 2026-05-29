@@ -28,13 +28,13 @@ async function submit() {
   <section class="text-center my-24 flex flex-col items-center">
     <h1 class="text-4xl font-bold mb-4">Create board</h1>
 
-    <form @submit.prevent="submit" class="bg-green-100 p-4 rounded text-left min-w-75">
+    <form @submit.prevent="submit" class="bg-indigo-100 p-4 rounded text-left min-w-75">
       <BaseInput id="name" label="Board Name" required v-model="formData.name" />
       <BaseInput id="description" label="Description" required v-model="formData.description" />
 
       <p v-if="errorMessage" class="text-red-600 mt-2">{{ errorMessage }}</p>
 
-      <button :disabled="loading" class="bg-green-800 text-white rounded w-full mt-4 p-2 font-bold">
+      <button :disabled="loading" class="bg-indigo-800 text-white rounded w-full mt-4 p-2 font-bold">
         {{ loading ? 'Creating...' : 'Create Board' }}
       </button>
     </form>

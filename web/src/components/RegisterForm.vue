@@ -1,9 +1,9 @@
 <template>
-  <form @submit.prevent="register" class="bg-green-100 max-w-min p-2">
+  <form @submit.prevent="register" class="bg-indigo-100 max-w-min p-2">
     <BaseInput id="username" label="Username" v-model="formData.username" />
     <BaseInput id="email" label="Email" type="email" v-model="formData.email" />
     <BaseInput id="password" label="Password" type="password" v-model="formData.password" />
-    <button :disabled="loading" class="bg-green-800 text-white rounded w-full mt-2 font-bold">
+    <button :disabled="loading" class="bg-indigo-800 text-white rounded w-full mt-2 font-bold">
       Register
     </button>
     <RouterLink to="/login">Login</RouterLink>
