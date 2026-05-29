@@ -5,8 +5,9 @@ import { getBoard } from '@/services/boards'
 import { getBoardTickets } from '@/services/tickets'
 import type { Board, Member } from '@/types/board'
 import { useNotificationStore } from '@/stores/notification'
-import type { SimpleTicketResponse } from '@/types/ticket'
+import type { SimpleTicket } from '@/types/ticket'
 import { useBoardStore } from '@/stores/board'
+import TicketPanel from '@/components/TicketPanel.vue'
 import MembersPanel from '@/components/MembersPanel.vue'
 
 const notificationStore = useNotificationStore()
@@ -14,13 +15,11 @@ const notificationStore = useNotificationStore()
 const boardId = parseInt(useRoute().params.board_id as string)
 const loading = ref(true)
 const board = ref<Board | null>(null)
-const tickets = ref<SimpleTicketResponse[]>([])
 
-async function loadData(): Promise<void> {
+async function load(): Promise<void> {
   loading.value = true
   try {
     board.value = await getBoard(boardId)
-    tickets.value = await getBoardTickets(boardId)
   } catch (e) {
     notificationStore.error(e instanceof Error ? e.message : 'Error getting data...')
   } finally {
@@ -28,31 +27,58 @@ async function loadData(): Promise<void> {
   }
 }
 
-onMounted(loadData)
+onMounted(load)
 </script>
 
 <template>
   <section class="grid grid-cols-[5fr_1fr] gap-4 h-full w-full overflow-hidden">
-    <div class="overflow-hidden flex flex-col h-full">
-      <div v-if="loading">Loading...</div>
-      <div v-else-if="board" class="flex flex-col h-full overflow-hidden">
-        <h1 class="shrink-0">{{ board.name }}</h1>
-        <p class="shrink-0">{{ board.description }}</p>
-        <div class="flex-1 overflow-hidden flex flex-col">
-          <h2 class="shrink-0">Tickets</h2>
-          <RouterLink class="shrink-0" :to="`/boards/${boardId}/create`">Create ticket</RouterLink>
-          <div class="flex-1 overflow-hidden">
-            <div v-for="ticket in tickets" :key="ticket.ticket_id">
-              <RouterLink :to="`/boards/${boardId}/tickets/${ticket.ticket_id}`">{{
-                ticket.title
-              }}</RouterLink>
-            </div>
-            <RouterView />
-          </div>
+    <!-- Main content -->
+    <div class="flex flex-col h-full overflow-hidden p-3">
+      <!-- Board header -->
+      <div class="shrink-0 border-b border-gray-300 pb-4 mb-4">
+        <div v-if="loading" class="space-y-2">
+          <div class="h-8 w-48 bg-gray-100 rounded animate-pulse"></div>
+          <div class="h-4 w-96 bg-gray-50 rounded animate-pulse"></div>
+        </div>
+
+        <div v-else-if="board">
+          <h1 class="text-3xl font-bold text-gray-700">
+            {{ board.name }}
+          </h1>
+
+          <p class="mt-2 text-sm text-gray-500">
+            {{ board.description }}
+          </p>
+        </div>
+
+        <div v-else class="text-gray-600 font-medium">Board not found.</div>
+      </div>
+
+      <!-- Tickets -->
+      <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="shrink-0 flex items-center justify-between border-b border-gray-300 pb-3 mb-3">
+          <h2 class="text-xl font-semibold text-gray-700">Tickets</h2>
+
+          <RouterLink
+            :to="`/boards/${boardId}/create`"
+            class="px-3 py-2 rounded-md bg-indigo-600 text-white text-sm font-medium"
+          >
+            Create ticket
+          </RouterLink>
+        </div>
+
+        <div class="flex-1 overflow-hidden">
+          <TicketPanel />
+          <RouterView />
         </div>
       </div>
-      <div v-else>Board not found.</div>
     </div>
-    <div class="overflow-y-auto h-full"><MembersPanel /></div>
+
+    <!-- Members -->
+    <aside class="h-full overflow-y-auto border-l border-gray-300 pl-4">
+      <h2 class="text-lg font-semibold text-gray-700 mb-4">Members</h2>
+
+      <MembersPanel />
+    </aside>
   </section>
 </template>

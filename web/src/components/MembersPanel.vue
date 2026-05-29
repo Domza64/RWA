@@ -27,8 +27,7 @@ onMounted(load)
 </script>
 
 <template>
-  <div class="p-4 h-full border-l border-gray-200">
-    <span>Members</span>
+  <div>
     <div v-if="loading">Loading members...</div>
     <div v-else-if="members.length > 0" v-for="member in members" :key="member.user.user_id">
       <div>

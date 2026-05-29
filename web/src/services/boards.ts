@@ -1,5 +1,6 @@
 import type { Board, Member } from '@/types/board'
 import { api } from '@/services/api'
+import type { WorkflowStage } from '@/types/ticket'
 
 export async function getBoards(): Promise<Board[]> {
   const { data } = await api.get<Board[]>('/boards')
@@ -19,5 +20,10 @@ export async function createBoard(name: string, description: string): Promise<nu
 
 export async function getMembers(board_id: number): Promise<Member[]> {
   const { data } = await api.get<Member[]>(`/boards/${board_id}/members`)
+  return data
+}
+
+export async function getWorkflowStages(board_id: number): Promise<WorkflowStage[]> {
+  const { data } = await api.get<WorkflowStage[]>(`/boards/${board_id}/workflow-stages`)
   return data
 }

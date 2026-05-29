@@ -24,12 +24,12 @@ export const useBoardStore = defineStore('boards', () => {
     }
   }
 
-  function getBoardsData() {
+  function getBoardsData(): Board[] {
     if (!loaded.value && !loading.value) {
       load()
     }
 
-    return boards
+    return boards.value
   }
 
   return {
