@@ -18,6 +18,16 @@ async def get_boards(db: AsyncSession, user_id: int) -> List[BoardDTO]:
     return [board for board in boards]
 
 
+async def get_board(db: AsyncSession, board_id: int, user_id: int) -> BoardDTO:
+    """
+    Vraća board info
+    """
+    await check_read_access(db, board_id, user_id)
+    
+    board = await board_repo.get_board(db, board_id)
+    return board
+
+
 async def create_board(db: AsyncSession, user: User, name: str, description: str) -> int:
     """Kreira novi board"""
     board_id = await board_repo.create_board(db, name, description, user)

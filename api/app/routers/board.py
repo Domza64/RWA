@@ -3,6 +3,7 @@ from typing import List
 from fastapi import APIRouter, Depends, status, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.errors import AppError
 from app.core import deps
 from app.core.deps import get_db
 from app.models import User
@@ -26,6 +27,15 @@ async def create_board(body: CreateBoardRequest, db: AsyncSession = Depends(get_
     """Kreira novi board"""
     board_id = await board_service.create_board(db, user, body.name, body.description)
     return CreateBoardResponse(board_id=board_id)
+
+
+@router.get("/{board_id}", response_model=BoardDTO)
+async def get_board(board_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(deps.get_current_user)):
+    """Vraća board info."""
+    board = await board_service.get_board(db, board_id, user.user_id)
+    if not board:
+        raise AppError("not_found", "Board not found", 404)
+    return board
 
 
 @router.get("/{board_id}/members", response_model=List[BoardUserResponse])

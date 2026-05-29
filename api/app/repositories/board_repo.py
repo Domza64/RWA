@@ -30,6 +30,14 @@ async def get_boards_for_user(db: AsyncSession, user_id: int):
     return has_access.scalars().all()
 
 
+async def get_board(db: AsyncSession, board_id: int):
+    board = await db.execute(
+        select(Board)
+        .where(Board.board_id == board_id)
+    )
+    return board.scalar_one_or_none()
+
+
 async def user_has_access(db, user_id, board_id) -> bool:
     has_access = await db.execute(
         select(BoardMembers).where(
