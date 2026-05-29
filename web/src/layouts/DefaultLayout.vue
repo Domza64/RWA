@@ -1,6 +1,6 @@
 <template>
   <Header />
-  <main class="h-screen w-full">
+  <main class="mt-10">
     <RouterView />
   </main>
 </template>

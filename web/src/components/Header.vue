@@ -1,6 +1,6 @@
 <template>
-  <header class="bg-indigo-800 text-white">
-    <nav class="mx-auto max-w-7xl w-full flex justify-between">
+  <header class="bg-indigo-800 text-white fixed top-0 w-full h-10">
+    <nav class="mx-auto max-w-7xl w-full flex justify-between items-center h-full">
       <div>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/boards">Boards</RouterLink>

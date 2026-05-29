@@ -12,18 +12,36 @@ const router = createRouter({
     },
     {
       path: '/boards',
-      name: 'boards',
-      component: () => import('../views/BoardsView.vue'),
-    },
-    {
-      path: '/boards/create',
-      name: 'create',
-      component: () => import('../views/BoardCreateView.vue'),
-    },
-    {
-      path: '/boards/:board_id',
-      name: 'board',
-      component: () => import('../views/BoardView.vue'),
+      component: () => import('../layouts/BoardLayout.vue'),
+      children: [
+        {
+          path: '',
+          name: 'boards',
+          component: () => import('../views/BoardsView.vue'),
+        },
+        {
+          path: 'create',
+          name: 'create',
+          component: () => import('../views/BoardCreateView.vue'),
+        },
+        {
+          path: ':board_id',
+          name: 'board',
+          component: () => import('../views/BoardView.vue'),
+          children: [
+            {
+              path: 'create',
+              name: 'create-ticket',
+              component: () => import('../views/TicketCreateView.vue'),
+            }
+          ]
+        },
+        {
+          path: ':board_id/tickets/:ticket_id',
+          name: 'ticket',
+          component: () => import('../views/TicketView.vue'),
+        },
+      ]
     },
     {
       path: '/login',

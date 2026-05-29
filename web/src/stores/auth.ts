@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import type { TokenResponse } from '@/types/auth'
 import type { UserData } from '@/types/user'
 import { api } from '@/services/api'

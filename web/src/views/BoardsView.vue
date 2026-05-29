@@ -25,7 +25,7 @@ onMounted(loadData)
 </script>
 
 <template>
-  <section class="text-center my-24">
+  <section class="text-center">
     <h1 class="text-4xl font-bold">Your boards</h1>
     <p v-if="loading">Loading...</p>
     <div v-else-if="boards.length === 0">
