@@ -37,9 +37,12 @@ async function load(): Promise<void> {
 
 onMounted(load)
 
-watch(() => ticketEventsStore.refreshCounter, () => {
-  load()
-})
+watch(
+  () => ticketEventsStore.refreshCounter,
+  () => {
+    load()
+  },
+)
 
 const groupedTickets = computed(() => {
   const map = new Map<number, SimpleTicket[]>()
@@ -49,6 +52,7 @@ const groupedTickets = computed(() => {
   }
 
   for (const ticket of tickets.value) {
+    if (!ticket.current_stage) continue
     const arr = map.get(ticket.current_stage.stage_id)
     if (arr) arr.push(ticket)
   }

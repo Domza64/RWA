@@ -15,7 +15,7 @@
   </form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import BaseInput from '@/components/ui/inputs/BaseInput.vue'
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -35,7 +35,9 @@ async function login() {
     await authStore.login(formData.username, formData.password)
     router.push('/boards')
   } catch (error) {
-    notificationStore.error(error.message || 'Login failed. Please try again.')
+    notificationStore.error(
+      error instanceof Error ? error.message : 'Login failed. Please try again.',
+    )
   } finally {
     loading.value = false
   }

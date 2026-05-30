@@ -1,12 +1,12 @@
-import type { Member } from './board'
+import type { UserData } from './user'
 
 export interface SimpleTicket {
   ticket_id: number
   title: string
   due_date: string
   urgency: number
-  assignee: Member
-  current_stage: WorkflowStage
+  assignee: UserData
+  current_stage: WorkflowStage | null
 }
 
 export interface WorkflowStage {

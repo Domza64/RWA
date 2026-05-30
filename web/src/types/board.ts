@@ -1,4 +1,4 @@
-import type { UserData } from "./user"
+import type { UserData } from './user'
 
 export interface Board {
   board_id: number

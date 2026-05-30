@@ -62,7 +62,7 @@ function isActive(boardId: number) {
 
     <!-- Main -->
     <div class="flex-1 overflow-hidden">
-      <RouterView />
+      <RouterView :key="route.fullPath" />
     </div>
   </div>
 </template>

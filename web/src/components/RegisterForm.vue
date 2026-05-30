@@ -10,7 +10,7 @@
   </form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import BaseInput from '@/components/ui/inputs/BaseInput.vue'
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -30,7 +30,8 @@ async function register() {
     await authStore.register(formData.username, formData.email, formData.password)
     router.push('/login?registered=true') // TODO: Show success message on login page
   } catch (error) {
-    errorMessage.value = error.message || 'Registration failed. Please try again.'
+    errorMessage.value =
+      error instanceof Error ? error.message : 'Registration failed. Please try again.'
   } finally {
     loading.value = false
   }

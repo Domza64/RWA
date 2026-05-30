@@ -19,30 +19,30 @@
       <form @submit.prevent="handleSubmit" class="flex flex-col gap-4">
         <BaseInput id="title" label="Title" required v-model="formData.title" />
         <BaseInput id="description" label="Description" required v-model="formData.description" />
-        
+
         <BaseInput id="due_date" type="date" label="Due Date" v-model="formData.due_date" />
-        
-        <BaseSelect 
-          id="urgency" 
-          label="Urgency" 
-          required 
-          :options="urgencyOptions" 
-          v-model="formData.urgency" 
+
+        <BaseSelect
+          id="urgency"
+          label="Urgency"
+          required
+          :options="urgencyOptions"
+          v-model="formData.urgency"
         />
-        
-        <BaseSelect 
-          id="asignee_id" 
-          label="Assignee" 
-          :options="assigneeOptions" 
-          v-model="formData.asignee_id" 
+
+        <BaseSelect
+          id="asignee_id"
+          label="Assignee"
+          :options="assigneeOptions"
+          v-model="formData.asignee_id"
           placeholder="Select assignee"
         />
-        
-        <BaseSelect 
-          id="current_stage" 
-          label="Current Stage" 
-          :options="stageOptions" 
-          v-model="formData.current_stage" 
+
+        <BaseSelect
+          id="current_stage"
+          label="Current Stage"
+          :options="stageOptions"
+          v-model="formData.current_stage"
           placeholder="Select stage"
         />
 
@@ -93,7 +93,7 @@ const stages = ref<WorkflowStage[]>([])
 const formData = reactive({
   title: '',
   description: '',
-  due_date: null as string | null,
+  due_date: '',
   urgency: 1,
   asignee_id: '' as string | number,
   current_stage: '' as string | number,
@@ -107,26 +107,23 @@ const urgencyOptions: SelectOption[] = [
   { value: 5, label: '5 - Critical' },
 ]
 
-const assigneeOptions = computed<SelectOption[]>(() => 
-  members.value.map(m => ({
+const assigneeOptions = computed<SelectOption[]>(() =>
+  members.value.map((m) => ({
     value: m.user.user_id,
-    label: m.user.username
-  }))
+    label: m.user.username,
+  })),
 )
 
-const stageOptions = computed<SelectOption[]>(() => 
-  stages.value.map(s => ({
+const stageOptions = computed<SelectOption[]>(() =>
+  stages.value.map((s) => ({
     value: s.stage_id,
-    label: s.name
-  }))
+    label: s.name,
+  })),
 )
 
 async function loadData() {
   try {
-    const [m, s] = await Promise.all([
-      getMembers(boardId),
-      getWorkflowStages(boardId)
-    ])
+    const [m, s] = await Promise.all([getMembers(boardId), getWorkflowStages(boardId)])
     members.value = m
     stages.value = s
   } catch (error) {
@@ -157,10 +154,10 @@ async function handleSubmit(): Promise<void> {
       Number(formData.urgency),
       formData.due_date || null,
       formData.asignee_id ? Number(formData.asignee_id) : null,
-      formData.current_stage ? Number(formData.current_stage) : null
+      formData.current_stage ? Number(formData.current_stage) : null,
     )
     notificationStore.success('Ticket created successfully')
-    
+
     const ticketEventsStore = useTicketEventsStore()
     ticketEventsStore.triggerRefresh()
 

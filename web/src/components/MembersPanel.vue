@@ -4,7 +4,6 @@ import { useRoute } from 'vue-router'
 import { getMembers } from '@/services/boards'
 import type { Member } from '@/types/board'
 import { useNotificationStore } from '@/stores/notification'
-import MembersList from './MembersList.vue'
 
 const notificationStore = useNotificationStore()
 

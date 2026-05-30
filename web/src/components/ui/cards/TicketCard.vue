@@ -25,7 +25,7 @@
       <div
         v-if="data.assignee"
         class="text-xs text-gray-600 font-medium truncate max-w-[120px]"
-        :title="data.assignee.name"
+        :title="data.assignee.username"
       >
         {{ data.assignee.username }}
       </div>
