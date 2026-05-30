@@ -16,13 +16,13 @@ from app.schemas.board import BoardDTO
 router = APIRouter()
 
 
-@router.get("/", response_model=list[BoardDTO])
+@router.get("", response_model=list[BoardDTO])
 async def get_boards(db: AsyncSession = Depends(get_db), user: User = Depends(deps.get_current_user)):
     """Vraća listu boardova korisnika."""
     return await board_service.get_boards(db, user.user_id)
 
 
-@router.post("/", response_model=CreateBoardResponse)
+@router.post("", response_model=CreateBoardResponse)
 async def create_board(body: CreateBoardRequest, db: AsyncSession = Depends(get_db), user: User = Depends(deps.get_current_user)):
     """Kreira novi board"""
     board_id = await board_service.create_board(db, user, body.name, body.description)
