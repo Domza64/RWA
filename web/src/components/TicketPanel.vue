@@ -65,31 +65,41 @@ const groupedTickets = computed(() => {
 </script>
 
 <template>
-  <div v-if="loading" class="text-gray-600">Loading board...</div>
+  <div v-if="loading" class="font-black uppercase text-xl tracking-widest animate-pulse p-4 bg-yellow-400 border-4 border-black inline-block shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+    Loading...
+  </div>
 
-  <div v-else class="flex gap-4 h-full overflow-x-auto">
+  <div v-else-if="groupedTickets.length === 0" class="border-4 border-black p-6 bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] font-black uppercase text-center">
+    No stages yet. Create one to get started.
+  </div>
+
+  <div v-else class="flex gap-6 h-full overflow-x-auto pb-4">
     <div
       v-for="col in groupedTickets"
       :key="col.stage.stage_id"
-      class="min-w-[250px] flex flex-col border border-gray-300 rounded-md"
+      class="min-w-[260px] w-[260px] flex flex-col border-4 border-black bg-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]"
     >
       <!-- Column header -->
-      <div class="p-2 border-b border-gray-300">
-        <h3 class="text-gray-700 font-semibold">
+      <div class="p-3 border-b-4 border-black bg-indigo-600 text-white">
+        <h3 class="font-black uppercase tracking-wider text-sm line-clamp-1">
           {{ col.stage.name }}
         </h3>
-        <p class="text-xs text-gray-400">{{ col.tickets.length }} tickets</p>
+        <p class="text-xs font-bold opacity-80 mt-0.5">{{ col.tickets.length }} ticket{{ col.tickets.length !== 1 ? 's' : '' }}</p>
       </div>
 
       <!-- Tickets -->
-      <div class="p-2 flex flex-col gap-2 overflow-y-auto">
-        <div v-for="ticket in col.tickets" :key="ticket.ticket_id">
-          <RouterLink :to="`/boards/${boardId}/tickets/${ticket.ticket_id}`">
-            <TicketCard :data="ticket" />
-          </RouterLink>
-        </div>
+      <div class="p-3 flex flex-col gap-3 overflow-y-auto flex-1">
+        <RouterLink
+          v-for="ticket in col.tickets"
+          :key="ticket.ticket_id"
+          :to="`/boards/${boardId}/tickets/${ticket.ticket_id}`"
+        >
+          <TicketCard :data="ticket" />
+        </RouterLink>
 
-        <div v-if="col.tickets.length === 0" class="text-xs text-gray-300 p-2">No tickets</div>
+        <div v-if="col.tickets.length === 0" class="text-xs font-black uppercase text-gray-400 p-2 border-2 border-dashed border-gray-300 text-center">
+          Empty
+        </div>
       </div>
     </div>
   </div>
