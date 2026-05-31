@@ -1,22 +1,6 @@
 <template>
-  <section
-    class="fixed inset-0 flex items-center justify-center bg-black/20 backdrop-blur-sm z-50"
-    @click="handleClose"
-  >
-    <div
-      class="relative bg-white p-6 rounded-lg shadow-md w-1/2 max-h-[90vh] overflow-y-auto"
-      @click.stop
-    >
-      <button
-        class="absolute top-4 right-4 text-2xl text-gray-500 hover:text-gray-800"
-        @click="handleClose"
-      >
-        &times;
-      </button>
-
-      <h2 class="text-3xl font-bold mb-6">Create ticket</h2>
-
-      <form @submit.prevent="handleSubmit" class="flex flex-col gap-4">
+  <BaseModal title="Create ticket" @close="handleClose">
+    <form @submit.prevent="handleSubmit" class="flex flex-col gap-4">
         <BaseInput id="title" label="Title" required v-model="formData.title" />
         <BaseInput id="description" label="Description" required v-model="formData.description" />
 
@@ -62,14 +46,14 @@
             {{ submitting ? 'Creating...' : 'Create Ticket' }}
           </button>
         </div>
-      </form>
-    </div>
-  </section>
+    </form>
+  </BaseModal>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import BaseModal from '@/components/ui/BaseModal.vue'
 import BaseInput from '@/components/ui/inputs/BaseInput.vue'
 import BaseSelect from '@/components/ui/inputs/BaseSelect.vue'
 import type { SelectOption } from '@/components/ui/inputs/BaseSelect.vue'

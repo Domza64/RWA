@@ -33,15 +33,20 @@ const router = createRouter({
               path: 'create',
               name: 'create-ticket',
               component: () => import('../views/TicketCreateView.vue'),
-            }
-          ]
+            },
+            {
+              path: 'create-stage',
+              name: 'create-stage',
+              component: () => import('../views/StageCreateView.vue'),
+            },
+          ],
         },
         {
           path: ':board_id/tickets/:ticket_id',
           name: 'ticket',
           component: () => import('../views/TicketView.vue'),
         },
-      ]
+      ],
     },
     {
       path: '/login',

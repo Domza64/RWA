@@ -27,3 +27,8 @@ export async function getWorkflowStages(board_id: number): Promise<WorkflowStage
   const { data } = await api.get<WorkflowStage[]>(`/boards/${board_id}/workflow-stages`)
   return data
 }
+
+export async function createWorkflowStage(board_id: number, name: string) {
+  const { data } = await api.post<WorkflowStage>(`/boards/${board_id}/workflow-stage`, { name })
+  return data.stage_id
+}

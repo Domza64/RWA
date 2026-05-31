@@ -2,11 +2,8 @@
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { getBoard } from '@/services/boards'
-import { getBoardTickets } from '@/services/tickets'
-import type { Board, Member } from '@/types/board'
+import type { Board } from '@/types/board'
 import { useNotificationStore } from '@/stores/notification'
-import type { SimpleTicket } from '@/types/ticket'
-import { useBoardStore } from '@/stores/board'
 import TicketPanel from '@/components/TicketPanel.vue'
 import MembersPanel from '@/components/MembersPanel.vue'
 
@@ -59,12 +56,20 @@ onMounted(load)
         <div class="shrink-0 flex items-center justify-between border-b border-gray-300 pb-3 mb-3">
           <h2 class="text-xl font-semibold text-gray-700">Tickets</h2>
 
-          <RouterLink
-            :to="`/boards/${boardId}/create`"
-            class="px-3 py-2 rounded-md bg-indigo-600 text-white text-sm font-medium"
-          >
-            Create ticket
-          </RouterLink>
+          <div class="flex gap-2">
+            <RouterLink
+              :to="`/boards/${boardId}/create-stage`"
+              class="px-3 py-2 rounded-md bg-indigo-100 text-indigo-700 hover:bg-indigo-200 text-sm font-medium"
+            >
+              Create stage
+            </RouterLink>
+            <RouterLink
+              :to="`/boards/${boardId}/create`"
+              class="px-3 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 text-sm font-medium"
+            >
+              Create ticket
+            </RouterLink>
+          </div>
         </div>
 
         <div class="flex-1 overflow-hidden">
