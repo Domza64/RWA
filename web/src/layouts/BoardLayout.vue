@@ -14,7 +14,7 @@ function isActive(boardId: number) {
 </script>
 
 <template>
-  <div class="flex h-[calc(100vh-2.5rem)] overflow-hidden">
+  <div class="flex h-[calc(100vh-3.5rem)] overflow-hidden">
     <!-- Sidebar -->
     <aside
       v-if="route.path !== '/boards'"
@@ -44,7 +44,7 @@ function isActive(boardId: number) {
           </div>
 
           <div class="text-xs text-gray-400 line-clamp-2">
-            {{ board.description || 'No description' }}
+            {{ board.description }}
           </div>
         </RouterLink>
       </div>

@@ -1,12 +1,12 @@
 <template>
-  <div class="flex flex-col mb-2">
-    <label :for="id">{{ label }}</label>
+  <div class="flex flex-col">
+    <label :for="id" class="font-black uppercase text-sm mb-1">{{ label }}</label>
 
     <input
       :id="id"
       :type="type"
       :required="required"
-      class="border border-indigo-800 rounded p-1"
+      class="border-4 border-black p-2 bg-white focus:outline-none focus:bg-indigo-50 font-medium"
       :value="modelValue"
       @input="onInput"
     />

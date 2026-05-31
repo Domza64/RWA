@@ -63,11 +63,18 @@ const router = createRouter({
 
 router.beforeEach((to) => {
   const authStore = useAuthStore()
+
   const publicRoutes = ['login', 'register', '']
+  const authPages = ['login', 'register']
 
   const currentRoute: string = to.name?.toString() || ''
-  console.log(currentRoute)
 
+  // Redirect authenticated users away from auth pages
+  if (authPages.includes(currentRoute) && authStore.user) {
+    return { name: 'boards' }
+  }
+
+  // Redirect unauthenticated users to login
   if (!publicRoutes.includes(currentRoute) && !authStore.user && !authStore.loading) {
     return { name: 'login' }
   }

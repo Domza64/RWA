@@ -9,8 +9,8 @@ export const useBoardStore = defineStore('boards', () => {
   const loading = ref(false)
   const loaded = ref(false)
 
-  async function load() {
-    if (loading.value || loaded.value) return
+  async function load(force = false) {
+    if (!force && (loading.value || loaded.value)) return
 
     loading.value = true
 

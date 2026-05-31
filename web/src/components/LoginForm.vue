@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="login" class="bg-indigo-100 max-w-min p-2">
+  <form @submit.prevent="login" class="flex flex-col gap-5 text-left">
     <BaseInput id="username" label="Username" required v-model="formData.username" />
     <BaseInput
       id="password"
@@ -8,10 +8,18 @@
       required
       v-model="formData.password"
     />
-    <button :disabled="loading" class="bg-indigo-800 text-white rounded w-full mt-2 font-bold">
-      Login
+    <button
+      :disabled="loading"
+      class="mt-2 border-4 border-black bg-indigo-600 hover:bg-indigo-700 text-white font-black uppercase tracking-wider py-3 px-4 transition-transform active:translate-y-1 disabled:opacity-70 disabled:active:translate-y-0"
+    >
+      {{ loading ? 'Authenticating...' : 'Login' }}
     </button>
-    <RouterLink to="/register">Register</RouterLink>
+    
+    <div class="text-center mt-2 border-t-4 border-black pt-4 font-bold">
+      <RouterLink to="/register" class="hover:underline hover:text-indigo-600 uppercase">
+        Create an account
+      </RouterLink>
+    </div>
   </form>
 </template>
 

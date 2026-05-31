@@ -3,8 +3,10 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { createBoard } from '@/services/boards'
 import BaseInput from '@/components/ui/inputs/BaseInput.vue'
+import { useBoardStore } from '@/stores/board'
 
 const router = useRouter()
+const boardStore = useBoardStore()
 
 const formData = reactive({ name: '', description: '' })
 const loading = ref(false)
@@ -15,6 +17,7 @@ async function submit() {
   errorMessage.value = ''
   try {
     const boardId = await createBoard(formData.name, formData.description)
+    await boardStore.load(true)
     router.push(`/boards/${boardId}`)
   } catch (error: any) {
     errorMessage.value = error.message || 'Failed to create board.'

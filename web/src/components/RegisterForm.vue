@@ -1,12 +1,22 @@
 <template>
-  <form @submit.prevent="register" class="bg-indigo-100 max-w-min p-2">
+  <form @submit.prevent="register" class="flex flex-col gap-5 text-left">
     <BaseInput id="username" label="Username" v-model="formData.username" />
     <BaseInput id="email" label="Email" type="email" v-model="formData.email" />
     <BaseInput id="password" label="Password" type="password" v-model="formData.password" />
-    <button :disabled="loading" class="bg-indigo-800 text-white rounded w-full mt-2 font-bold">
-      Register
+    
+    <p v-if="errorMessage" class="text-red-600 font-bold bg-red-100 border-4 border-red-600 p-2 uppercase text-sm tracking-wider">{{ errorMessage }}</p>
+
+    <button
+      :disabled="loading"
+      class="mt-2 border-4 border-black bg-indigo-600 hover:bg-indigo-700 text-white font-black uppercase tracking-wider py-3 px-4 transition-transform active:translate-y-1 disabled:opacity-70 disabled:active:translate-y-0"
+    >
+      {{ loading ? 'Creating Account...' : 'Register' }}
     </button>
-    <RouterLink to="/login">Login</RouterLink>
+    <div class="text-center mt-2 border-t-4 border-black pt-4 font-bold">
+      <RouterLink to="/login" class="hover:underline hover:text-indigo-600 uppercase">
+        Already have an account? Login
+      </RouterLink>
+    </div>
   </form>
 </template>
 

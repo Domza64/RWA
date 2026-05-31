@@ -53,6 +53,7 @@ export const useAuthStore = defineStore('auth', () => {
     const { data } = await api.post<TokenResponse>('/auth/login', { username, password })
     setTokens(data.access_token, data.refresh_token)
     await fetchMe()
+    isAuthenticated.value = true
     return user.value
   }
 
@@ -63,6 +64,7 @@ export const useAuthStore = defineStore('auth', () => {
   function logout() {
     user.value = null
     accessToken.value = null
+    isAuthenticated.value = false
     localStorage.removeItem('access_token')
     localStorage.removeItem('refresh_token')
     import('@/router').then(({ default: router }) => router.push('/login'))

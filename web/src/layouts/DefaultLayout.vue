@@ -1,6 +1,6 @@
 <template>
   <Header />
-  <main class="mt-10">
+  <main class="mt-14">
     <RouterView />
   </main>
 </template>
