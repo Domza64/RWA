@@ -14,3 +14,15 @@ export interface WorkflowStage {
   stage_id: number
   name: string
 }
+
+export interface Ticket {
+  ticket_id: number
+  title: string
+  description: string
+  due_date: string
+  urgency: number
+  assignee: UserData | null
+  reporter: UserData | null
+  current_stage: WorkflowStage | null
+  possible_stages: WorkflowStage[]
+}
