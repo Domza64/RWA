@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import HomeView from '../views/HomeView.vue'
+import { useUiStore } from '@/stores/ui.ts'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -63,21 +64,32 @@ const router = createRouter({
 
 router.beforeEach((to) => {
   const authStore = useAuthStore()
+  const ui = useUiStore()
+
+  ui.loading = true
 
   const publicRoutes = ['login', 'register', '']
   const authPages = ['login', 'register']
 
   const currentRoute: string = to.name?.toString() || ''
 
-  // Redirect authenticated users away from auth pages
   if (authPages.includes(currentRoute) && authStore.user) {
     return { name: 'boards' }
   }
 
-  // Redirect unauthenticated users to login
   if (!publicRoutes.includes(currentRoute) && !authStore.user && !authStore.loading) {
     return { name: 'login' }
   }
+})
+
+router.afterEach(() => {
+  const ui = useUiStore()
+  ui.loading = false
+})
+
+router.onError(() => {
+  const ui = useUiStore()
+  ui.loading = false
 })
 
 export default router
